@@ -173,3 +173,40 @@ dim(kaneko_dfm_study1)
 
 1. Estimate a wordfish model for the @kaneko_estimating_2021 data
 2. Visualize the results
+
+##1. Estimate a wordfish model for the @kaneko_estimating_2021 data
+```{r}
+set.seed(123L)
+#to make sure the repeatability of our result, what is the meaning of 123L
+kaneko_dfm_study1_results <- textmodel_wordfish(kaneko_dfm_study1, 
+                                             sparse = TRUE)
+#keeping the sparse of our data,use wordfish to esitmate the ideology (by quantification the frequency of words)
+summary(kaneko_dfm_study1_results)
+#summary the result of previous operation 
+```
+##2. Visualize the results
+```{r}
+textplot_scale1d(kaneko_dfm_study1_results)
+#visualize the result by a scatter diagram
+```
+```{r}
+textplot_scale1d(kaneko_dfm_study1_results, margin = "features")
+#visualize the result by words
+```
+```{r}
+features <- kaneko_dfm_study1_results[["features"]]
+
+betas <- kaneko_dfm_study1_results[["beta"]]
+
+feat_betas <- as.data.frame(cbind(features, betas))
+feat_betas$betas <- as.numeric(feat_betas$betas)
+#build a dataframe which consists of words and betas, make sure the data type of detas is numeric type
+feat_betas %>%
+  arrange(desc(betas)) %>% #arrange the data in descending order
+  top_n(20) %>% #select top 20 data
+  kbl() %>% #a simplified version of kable(),convert the dataframe into markdown
+  kable_styling(bootstrap_options = "striped") #use Bootstrap to make the result more readable
+
+```
+
+
